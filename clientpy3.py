@@ -59,7 +59,10 @@ class stock:
 
     def updateOrderInfo(self):
         #get the bid and ask prices of the tickers
-        
+        bidAsk = run_orders(self.ticker)
+        self.bid = bidAsk[0][2]
+        self.ask = bidAsk[1][2]
+        #print("The bid price of " + self.ticker + " is " + self.bid + ". \n The ask price is " + self.ask + ".")
         
     def setShareValue(self):
         # this only needs to get calculated once
@@ -96,33 +99,18 @@ def run_securities(): # returns list of lists
   return lol
 
 def run_orders(tkr): # returns list of market orders
-  output = run("Better_Biddys","gibsonsux","ORDERS AAPL")
-  print(output)
-  outputP = output.split(" ");
-
-  i = 1
-  lol = []
-  bidAsk = []
-  while i<len(outputP):
-    lol.append(outputP[i:i+4])
-    i+=4
-  bidAsk.append(lol[0])
-  bidAsk.append(lol[len(lol)-1])
-  return bidAsk        
-
-def run_orders(tkr): # returns list of market orders
-  output = run("Better_Biddys","gibsonsux","ORDERS AAPL")
-  outputP = output.split(" ");
-
-  i = 1
-  lol = []
-  bidAsk = []
-  while i<len(outputP):
-    lol.append(outputP[i:i+4])
-    i+=4
-  bidAsk.append(lol[0])
-  bidAsk.append(lol[len(lol)-1])
-  return bidAsk 
+    output = run("Better_Biddys","gibsonsux","ORDERS " + tkr)
+    outputP = output.split(" ");
+    
+    i = 1
+    lol = []
+    bidAsk = []
+    while i<len(outputP):
+        lol.append(outputP[i:i+4])
+        i+=4
+    bidAsk.append(lol[0])
+    bidAsk.append(lol[len(lol)-1])
+    return bidAsk        
 
 ## VIVIAN
 if __name__ == "__main__":
@@ -141,5 +129,6 @@ if __name__ == "__main__":
     for i in range(0, len(marketInfo)):
         stocks[i].updateStockInfo(marketInfo[i][0], marketInfo[i][1], marketInfo[2], marketInfo[3]) #ticker, networth, div ratio, volatility
     for each in stocks:
-        print(each.ticker)
+        #print(each.ticker)
+        each.updateOrderInfo()
         
