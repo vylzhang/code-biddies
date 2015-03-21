@@ -74,7 +74,7 @@ class stock:
         # return the ask
         return self.ask
 
-## LEIGHTON
+## VIVIAN
 def run_securities(): # returns list of lists
   output = run("Better_Biddys","gibsonsux","SECURITIES")
   outputP = output.split(" ");
@@ -91,7 +91,7 @@ def run_securities(): # returns list of lists
   return lol
         
 
-## VIVIAN
+## LEIGHTON
 if __name__ == "__main__":
     if len(sys.argv) != 4:
         print("Enter username, password, command")
