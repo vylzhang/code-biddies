@@ -47,18 +47,20 @@ class stock:
         self.currDividendRatio = -1
         self.volitility = -1
         self.marketHistory = list() # market value
-   
+
     def updateStockInfo(self, ticker, netWorth, dividendRatio, volitility):
         # call this method every iteration to receive all the parsed data
         #   for the stock
         self.ticker = ticker
         self.netWorth = netWorth
-        #self.bid = bid
-        #self.ask = ask
         self.prevDividendRatio = self.currDividendRatio
         self.currDividendRatio = dividendRatio
         self.volitility = volitility
 
+    def updateOrderInfo(self):
+        #get the bid and ask prices of the tickers
+        
+        
     def setShareValue(self):
         # this only needs to get calculated once
         # all actions depend on this long-term stock price
@@ -66,6 +68,9 @@ class stock:
         decreasefactor = currDividendRatio / prevDividendRatio
         self.ShareValue = initialDividendPayout / (1-dividendRatio)
 
+    def getTicker(self):
+        return self.ticker
+    
     def getBid(self):
         # return the bid
         return self.bid
