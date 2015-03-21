@@ -1,7 +1,7 @@
 import socket
 import sys
 
-maxMarketHistorySize = 50    
+maxMarketHistorySize = 50
 
 def run(user, password, *commands):
     HOST, PORT = "codebb.cloudapp.net", 17429
@@ -15,12 +15,14 @@ def run(user, password, *commands):
         sfile = sock.makefile()
         rline = sfile.readline()
         while rline:
-            print(rline.strip())
+            temp = rline.strip()
+            print(temp)
             rline = sfile.readline()
+            return temp
 
 def subscribe(user, password):
     HOST, PORT = "codebb.cloudapp.net", 17429
-    
+
     data=user + " " + password + "\nSUBSCRIBE\n"
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -32,7 +34,7 @@ def subscribe(user, password):
         while rline:
             print(rline.strip())
             rline = sfile.readline()
-            
+
 if __name__ == "__main__":
     if len(sys.argv) != 4:
         print("Enter username, password, command")
@@ -51,7 +53,7 @@ class stock:
         self.dividendRatio = 0.1
         self.volitility = 0.2
         self.marketHistory = list() #market value
-        
+
     def updateValues(self, ticker, netWorth, bid, ask, dividendRatio, volitility, currMarketValue):
         self.ticker = ticker
         self.netWorth = netWorth
@@ -62,8 +64,8 @@ class stock:
         if len(self.marketHistory) >= 50:
             marketHistory.pop(0)
         marketHistory.append(marketHistory)
-            
-        
+
+
 
 ## LEIGHTON
 
