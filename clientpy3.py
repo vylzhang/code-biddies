@@ -7,6 +7,10 @@ import parse
 maxMarketHistorySize = 50
 numOfStocks = 10
 initialCash = 1000
+timeToSell = 100
+
+timeCount = 0 
+blackList = [0,0,0,0,0,0,0,0,0,0]
 
 HOST, PORT = "codebb.cloudapp.net", 17429
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -96,7 +100,7 @@ class stock:
     def getAsk(self):
         # return the ask
         return float(self.ask)
-    
+
 
 ## LEIGHTON
 def run_securities(): # returns list of lists
@@ -214,11 +218,25 @@ if __name__ == "__main__":
 
             print("sum is " + str(sum))
             
-            if currCash > (0.25 * initialCash) and sum == 5:
-                bid(stocks[i].ticker, stocks[i].getBid()+0.01, 5)
+            if currCash > (0.25 * initialCash) and sum == 4 and blackList[i] == 0:
+                print("WE MADE A BIDDDDDDDD!")
+                bid(stocks[i].ticker, stocks[i].getBid()+0.01, 4)
+                timeCount = 0
             if currCash < (0.90 * initialCash) and sum <= -3:
                 ask(stocks[i].ticker, stocks[i].getAsk()-0.01, numSecurity(stocks[i].ticker))
+                timeCount = 0
+            else:
+                timeCount = timeCount+1
+            #if 0.75 * stock[i].ticker * numSecurity(stocks[i].ticker)
             print(currCash)
 
+        if timeCount >= 100:
+            for i in range(0, len(marketInfo)):
+                if int(numSecurity(stocks[i].ticker)) > 10:
+                    ask(stocks[i].ticker, stocks[i].getBid(), numSecurity(stocks[i].ticker))
+                    blackList[i] = 1
+            timeCount = 0
+        print("\n                         " + str(timeCount))
+        print(blackList)
         #temp = subscribe("Better_Biddys","gibsonsux")
         #print(temp)
