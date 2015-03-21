@@ -1,5 +1,6 @@
 import socket
 import sys
+import parse
 
 maxMarketHistorySize = 50
 numOfStocks = 10
@@ -17,7 +18,6 @@ def run(user, password, *commands):
         rline = sfile.readline()
         while rline:
             temp = rline.strip()
-            print(temp)
             rline = sfile.readline()
             return temp
 
@@ -35,14 +35,6 @@ def subscribe(user, password):
         while rline:
             print(rline.strip())
             rline = sfile.readline()
-            
-if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Enter username, password, command")
-    else:
-        arg = sys.argv
-        run(arg[1],arg[2],arg[3])
-    main()
 
 ## HING
 class stock:
@@ -63,12 +55,9 @@ class stock:
         self.netWorth = netWorth
         #self.bid = bid
         #self.ask = ask
-        self.prevDividendRatio = currDividendRatio
+        self.prevDividendRatio = self.currDividendRatio
         self.currDividendRatio = dividendRatio
         self.volitility = volitility
-        if len(self.marketHistory) >= 50:
-            marketHistory.pop(0)
-        marketHistory.append(marketHistory)
 
     def setShareValue(self):
         # this only needs to get calculated once
@@ -86,18 +75,38 @@ class stock:
         return self.ask
 
 ## LEIGHTON
-    def main():
-        
-        stocks = [] #list of lists that will contain the current market information
-        for i in range(0, numOfStocks) #instantiate each stock
-            x = stocks()
-            stocks.append(x)
+def run_securities(): # returns list of lists
+  output = run("Better_Biddys","gibsonsux","SECURITIES")
+  outputP = output.split(" ");
 
-        #per second loop starts here
-        marketInfo = getMarketInfo()
-        for stock in stocks
-            for stockData in marketInfo:
-                stock.updateStockInfo(stockData[0], stockData[1], stockData[2], stockData[3]) #ticker, networth, div ratio, volatilit
+  i = 1
+  lol = []
+  while i<len(outputP):
+    lol.append(outputP[i:i+4])
+    i+=4
+
+  # for o in lol:
+  #   print(" ", o ," ")
+
+  return lol
         
 
 ## VIVIAN
+if __name__ == "__main__":
+    if len(sys.argv) != 4:
+        print("Enter username, password, command")
+    else:
+        arg = sys.argv
+        run(arg[1],arg[2],arg[3])
+    stocks = [] #list of lists that will contain the current market information
+    for i in range(0, numOfStocks): #instantiate each stock
+        x = stock()
+        stocks.append(x)
+
+    #per second loop starts here
+    marketInfo = run_securities()
+    for i in range(0, len(marketInfo)):
+        stocks[i].updateStockInfo(marketInfo[i][0], marketInfo[i][1], marketInfo[2], marketInfo[3]) #ticker, networth, div ratio, volatility
+    for each in stocks:
+        print(each.ticker)
+        
