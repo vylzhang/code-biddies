@@ -37,7 +37,7 @@ def subscribe(user, password):
             rline = sfile.readline()
 
 ## HING
-class stock:
+class marketStock:
 
     def __init__(self):
         self.ticker = ""
@@ -75,12 +75,38 @@ class stock:
         return self.ticker
     
     def getBid(self):
-        # return the bid
+        # return the highest bid
         return self.bid
 
     def getAsk(self):
-        # return the ask
+        # return the lowest ask
         return self.ask
+
+class transaction:
+    def __init__(self):
+        typeOf = "BID"
+        price = 0
+        amount = 0
+        
+class ownedStock:
+    def __init__(self):
+        ticker = ""
+        numberOwned = 0
+        numberBought = []
+        priceBought = []
+        numberSold = []
+        priceSold = []
+
+    def buyStock(trans):
+        numberOwned += trans.amount
+        numberBought.append(trans.amount)
+        priceBought.append(trans.price)
+
+    def sellStock(trans)
+        numberOwned -= trans.amount
+        numberSold.append(trans.amount)
+        priceSold.append(trans.price)
+
 
 ## VIVIAN
 def run_securities(): # returns list of lists
@@ -121,7 +147,7 @@ if __name__ == "__main__":
         run(arg[1],arg[2],arg[3])
     stocks = [] #list of lists that will contain the current market information
     for i in range(0, numOfStocks): #instantiate each stock
-        x = stock()
+        x = marketStock()
         stocks.append(x)
 
     #per second loop starts here
