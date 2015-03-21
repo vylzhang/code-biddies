@@ -44,26 +44,42 @@ if __name__ == "__main__":
 class stock:
 
     def __init__(self):
-        self.ticker = ABC
-        self.netWorth = 123
-        self.bid = 123
-        self.ask = 456
-        self.dividendRatio = 0.1
-        self.volitility = 0.2
+        self.ticker = ""
+        self.netWorth = -1
+        self.bid = -1
+        self.ask = -1
+        self.currDividendRatio = -1
+        self.volitility = -1
         self.marketHistory = list() #market value
+        #self.initialDividendPayout = 0
         
-    def updateValues(self, ticker, netWorth, bid, ask, dividendRatio, volitility, currMarketValue):
+    #def setValues(bid, ask):
+   
+    def updateStockInfo(self, ticker, netWorth, dividendRatio, volitility):
         self.ticker = ticker
         self.netWorth = netWorth
-        self.bid = bid
-        self.ask = ask
-        self.dividendRatio = dividendRatio
+        #self.bid = bid
+        #self.ask = ask
+        self.prevDividendRatio = currDividendRatio
+        self.currDividendRatio = dividendRatio
         self.volitility = volitility
         if len(self.marketHistory) >= 50:
             marketHistory.pop(0)
         marketHistory.append(marketHistory)
-            
-        
+
+    def setShareValue(self):
+        # this only needs to get calculated once
+        # all actions depend on this long-term stock price
+        initialDividendPayout = marketHistory(0) * prevDividendRatio
+        decreasefactor = currDividendRatio / prevDividendRatio
+        self.ShareValue = initialDividendPayout / (1-dividendRatio)
+
+    def getBid(self):
+        a = 1 #return the bid; placeholder code
+
+    def getAsk(self):
+        a = 1 #return the ask; placeholder code
+
 
 ## LEIGHTON
 
