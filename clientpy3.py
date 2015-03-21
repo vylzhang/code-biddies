@@ -1,7 +1,8 @@
 import socket
 import sys
 
-maxMarketHistorySize = 50    
+maxMarketHistorySize = 50
+numOfStocks = 10
 
 def run(user, password, *commands):
     HOST, PORT = "codebb.cloudapp.net", 17429
@@ -39,6 +40,7 @@ if __name__ == "__main__":
     else:
         arg = sys.argv
         run(arg[1],arg[2],arg[3])
+    main()
 
 ## HING
 class stock:
@@ -66,6 +68,18 @@ class stock:
         
 
 ## LEIGHTON
+    def main():
+        
+        stocks = [] #list of lists that will contain the current market information
+        for i in range(0, numOfStocks) #instantiate each stock
+            x = stocks()
+            stocks.append(x)
 
+        #per second loop starts here
+        marketInfo = getMarketInfo()
+        for stock in stocks
+            for stockData in marketInfo:
+                stock.updateStockInfo(stockData[0], stockData[1], stockData[2], stockData[3]) #ticker, networth, div ratio, volatilit
+        
 
 ## VIVIAN
