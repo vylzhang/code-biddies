@@ -1,58 +1,68 @@
 import socket
 import sys
 import parse
+#from collections import deque
+
 
 maxMarketHistorySize = 50
 numOfStocks = 10
+initialCash = 1000
+
+HOST, PORT = "codebb.cloudapp.net", 17429
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect((HOST, PORT))
+sfile = sock.makefile()
+user = "Better_Biddys"
+password = "gibsonsux"
+data=user + " " + password + "\n"
+sock.sendall(bytes(data, 'UTF-8'))
 
 def run(user, password, *commands):
-    HOST, PORT = "codebb.cloudapp.net", 17429
 
-    data=user + " " + password + "\n" + "\n".join(commands) + "\nCLOSE_CONNECTION\n"
+    data = "\n".join(commands) + "\n"
 
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+    sock.sendall(bytes(data, 'UTF-8'))
 
-        sock.connect((HOST, PORT))
-        sock.sendall(bytes(data, "utf-8"))
-        sfile = sock.makefile()
-        rline = sfile.readline()
-        while rline:
-            temp = rline.strip()
-            rline = sfile.readline()
-            return temp
+    rline = sfile.readline()
+    return rline.strip()
 
 def subscribe(user, password):
     HOST, PORT = "codebb.cloudapp.net", 17429
-    
+
     data=user + " " + password + "\nSUBSCRIBE\n"
 
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         sock.connect((HOST, PORT))
-        sock.sendall(bytes(data, "utf-8"))
+        sock.sendall(bytes(data, 'UTF-8'))
         sfile = sock.makefile()
         rline = sfile.readline()
         while rline:
             print(rline.strip())
             rline = sfile.readline()
+    finally:
+        sock.close()
 
 ## HING
 class stock:
-
     def __init__(self):
         self.ticker = ""
-        self.netWorth = -1
+        self.prevNetWorth = -1
+        self.currNetWorth = -1
         self.bid = -1
         self.ask = -1
         self.currDividendRatio = -1
         self.volitility = -1
         self.marketHistory = list() # market value
+        self.trend = []
 
     def updateStockInfo(self, ticker, netWorth, dividendRatio, volitility):
         # call this method every iteration to receive all the parsed data
         #   for the stock
         self.ticker = ticker
-        self.netWorth = netWorth
+        self.prevNetWorth = float(self.currNetWorth)
+        self.currNetWorth = float(netWorth)
         self.prevDividendRatio = self.currDividendRatio
         self.currDividendRatio = dividendRatio
         self.volitility = volitility
@@ -60,6 +70,8 @@ class stock:
     def updateOrderInfo(self):
         #get the bid and ask prices of the tickers
         bidAsk = run_orders(self.ticker)
+        #print(bidAsk[0])
+        #print(bidAsk[1])
         self.bid = bidAsk[0][2]
         self.ask = bidAsk[1][2]
         #print("The bid price of " + self.ticker + " is " + self.bid + ". \n The ask price is " + self.ask + ".")
@@ -71,6 +83,9 @@ class stock:
         decreasefactor = currDividendRatio / prevDividendRatio
         self.ShareValue = initialDividendPayout / (1-dividendRatio)
 
+    def isIncreasing(self):
+        return self.currNetWorth > self.prevNetWorth
+
     def getTicker(self):
         return self.ticker
     
@@ -81,6 +96,7 @@ class stock:
     def getAsk(self):
         # return the ask
         return float(self.ask)
+    
 
 ## LEIGHTON
 def run_securities(): # returns list of lists
@@ -116,7 +132,33 @@ def bid(ticker, price, qty):
     run("Better_Biddys","gibsonsux","BID " + ticker + " " + str(price) + " " + str(qty))
 
 def ask(ticker, price, qty):
-    run("Better_Biddys","gibsonsux","ASK " + ticker + " " + str(round(price)) + " " + str(qty))
+    run("Better_Biddys","gibsonsux","ASK " + ticker + " " + str(price) + " " + str(qty))
+
+def numSecurity(ticker):
+    temp = run("Better_Biddys","gibsonsux","MY_SECURITIES")
+    temp2 = temp.split(" ")
+    i = 1
+    lol = []
+    while i<len(temp2):
+        lol.append(temp2[i:i+2])
+        #print("dirt!!" + temp2[i] + " " + temp2[i+1])
+        i+=3
+    for each in lol:
+        if each[0] == ticker:
+            return each[1]
+    return -1
+
+def numOrders(ticker):
+    temp = run("Better_Biddys","gibsonsux","MY_ORDERS")
+    temp2 = temp.split(" ")
+    i = 1
+    lol = []
+    while i < len(temp2):
+        lol.append(temps2[i:i+3])
+        i+=3
+
+def setInitialCash(num):
+    initialCash = num
 
 ## VIVIAN
 if __name__ == "__main__":
@@ -125,29 +167,58 @@ if __name__ == "__main__":
 #    else:
 #        arg = sys.argv
 #        run(arg[1],arg[2],arg[3])
+    cash_temp = run("Better_Biddys","gibsonsux","MY_CASH")
+    cash_temp = cash_temp.split(" ")
+    cash = float(cash_temp[1])
+    setInitialCash(cash)
+
+    stocks = [] #list of lists that will contain the current market information
+    for i in range(0, numOfStocks): #instantiate each stock
+        x = stock()
+        stocks.append(x)
+    
     while True:
         cash_temp = run("Better_Biddys","gibsonsux","MY_CASH")
-        cash_temp = cash_temp.split(" ")
-        cash = float(cash_temp[1])
+        cash_temp2 = cash_temp.split(" ")
+        currCash = float(cash_temp2[1])
 
         print("Cash: " + str(cash))
-        stocks = [] #list of lists that will contain the current market information
-        for i in range(0, numOfStocks): #instantiate each stock
-            x = stock()
-            stocks.append(x)
 
+        
         #per second loop starts here
         marketInfo = run_securities()
         for i in range(0, len(marketInfo)):
-            stocks[i].updateStockInfo(marketInfo[i][0], marketInfo[i][1], marketInfo[2], marketInfo[3]) #ticker, networth, div ratio, volatility
+            stocks[i].updateStockInfo(marketInfo[i][0], marketInfo[i][1], marketInfo[i][2], marketInfo[i][3]) #ticker, networth, div ratio, volatility
+            
+            #for each in stocks:
+                #each.updateOrderInfo()
+            stocks[i].updateOrderInfo()
+            sum = 0
 
-        for each in stocks:
-            #print(each.ticker)
-            each.updateOrderInfo()
-        print(stocks[0].getBid())
-        bid("AAPL", stocks[0].getBid(), 5)
-        #run("Better_Biddys","gibsonsux","BID AAPL " + str(round(stocks[0].getBid())+0.01) + " 5")
-        if cash < 1000:
-            ask("AAPL", stocks[0].getAsk(), 5)
-            #run("Better_Biddys","gibsonsux","ASK AAPL " + (stocks[0].getAsk()-0.01) + " 5")
+            print("curr" + str(stocks[i].currNetWorth))
+            print("prev" + str(stocks[i].prevNetWorth))
+            #print(initialCash)
         
+            if len(stocks[i].trend) >= 5:
+                stocks[i].trend.pop(0)                    
+            if stocks[i].currNetWorth > stocks[i].prevNetWorth:
+                (stocks[i].trend).append(1)
+            elif stocks[i].currNetWorth < stocks[i].prevNetWorth:
+                (stocks[i].trend).append(-1)
+            else:
+                (stocks[i].trend).append(0)
+
+            #print(len(each.trend))
+            for j in range(0,len(stocks[i].trend)):
+                sum = sum + stocks[i].trend[j]
+
+            print("sum is " + str(sum))
+            
+            if currCash > (0.25 * initialCash) and sum == 5:
+                bid(stocks[i].ticker, stocks[i].getBid()+0.01, 5)
+            if currCash < (0.90 * initialCash) and sum <= -3:
+                ask(stocks[i].ticker, stocks[i].getAsk()-0.01, numSecurity(stocks[i].ticker))
+            print(currCash)
+
+        #temp = subscribe("Better_Biddys","gibsonsux")
+        #print(temp)
