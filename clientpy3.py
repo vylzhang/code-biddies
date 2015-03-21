@@ -75,12 +75,12 @@ class marketStock:
         return self.ticker
     
     def getBid(self):
-        # return the highest bid
-        return self.bid
+        # return the bid
+        return float(self.bid)
 
     def getAsk(self):
-        # return the lowest ask
-        return self.ask
+        # return the ask
+        return float(self.ask)
 
 class transaction:
     def __init__(self):
@@ -102,7 +102,7 @@ class ownedStock:
         numberBought.append(trans.amount)
         priceBought.append(trans.price)
 
-    def sellStock(trans)
+    def sellStock(trans):
         numberOwned -= trans.amount
         numberSold.append(trans.amount)
         priceSold.append(trans.price)
@@ -126,7 +126,7 @@ def run_securities(): # returns list of lists
 
 def run_orders(tkr): # returns list of market orders
     output = run("Better_Biddys","gibsonsux","ORDERS " + tkr)
-    outputP = output.split(" ");
+    outputP = output.split(" ")
     
     i = 1
     lol = []
@@ -136,25 +136,44 @@ def run_orders(tkr): # returns list of market orders
         i+=4
     bidAsk.append(lol[0])
     bidAsk.append(lol[len(lol)-1])
-    return bidAsk        
+    return bidAsk
+
+def bid(ticker, price, qty):
+    run("Better_Biddys","gibsonsux","BID " + ticker + " " + str(price) + " " + str(qty))
+
+def ask(ticker, price, qty):
+    run("Better_Biddys","gibsonsux","ASK " + ticker + " " + str(round(price)) + " " + str(qty))
 
 ## LEIGHTON
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Enter username, password, command")
-    else:
-        arg = sys.argv
-        run(arg[1],arg[2],arg[3])
-    stocks = [] #list of lists that will contain the current market information
-    for i in range(0, numOfStocks): #instantiate each stock
-        x = marketStock()
-        stocks.append(x)
+#    if len(sys.argv) != 4:
+#        print("Enter username, password, command")
+#    else:
+#        arg = sys.argv
+#        run(arg[1],arg[2],arg[3])
+    while True:
+        cash_temp = run("Better_Biddys","gibsonsux","MY_CASH")
+        cash_temp = cash_temp.split(" ")
+        cash = float(cash_temp[1])
 
-    #per second loop starts here
-    marketInfo = run_securities()
-    for i in range(0, len(marketInfo)):
-        stocks[i].updateStockInfo(marketInfo[i][0], marketInfo[i][1], marketInfo[2], marketInfo[3]) #ticker, networth, div ratio, volatility
-    for each in stocks:
-        #print(each.ticker)
-        each.updateOrderInfo()
+        print("Cash: " + str(cash))
+        stocks = [] #list of lists that will contain the current market information
+        for i in range(0, numOfStocks): #instantiate each stock
+            x = marketStock()
+            stocks.append(x)
+
+        #per second loop starts here
+        marketInfo = run_securities()
+        for i in range(0, len(marketInfo)):
+            stocks[i].updateStockInfo(marketInfo[i][0], marketInfo[i][1], marketInfo[2], marketInfo[3]) #ticker, networth, div ratio, volatility
+
+        for each in stocks:
+            #print(each.ticker)
+            each.updateOrderInfo()
+        print(stocks[0].getBid())
+        bid("AAPL", stocks[0].getBid(), 5)
+        #run("Better_Biddys","gibsonsux","BID AAPL " + str(round(stocks[0].getBid())+0.01) + " 5")
+        if cash < 1000:
+            ask("AAPL", stocks[0].getAsk(), 5)
+            #run("Better_Biddys","gibsonsux","ASK AAPL " + (stocks[0].getAsk()-0.01) + " 5")
         
