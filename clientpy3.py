@@ -16,8 +16,10 @@ def run(user, password, *commands):
         sfile = sock.makefile()
         rline = sfile.readline()
         while rline:
-            print(rline.strip())
+            temp = rline.strip()
+            print(temp)
             rline = sfile.readline()
+            return temp
 
 def subscribe(user, password):
     HOST, PORT = "codebb.cloudapp.net", 17429
@@ -46,26 +48,42 @@ if __name__ == "__main__":
 class stock:
 
     def __init__(self):
-        self.ticker = ABC
-        self.netWorth = 123
-        self.bid = 123
-        self.ask = 456
-        self.dividendRatio = 0.1
-        self.volitility = 0.2
-        self.marketHistory = list() #market value
-        
-    def updateValues(self, ticker, netWorth, bid, ask, dividendRatio, volitility, currMarketValue):
+        self.ticker = ""
+        self.netWorth = -1
+        self.bid = -1
+        self.ask = -1
+        self.currDividendRatio = -1
+        self.volitility = -1
+        self.marketHistory = list() # market value
+   
+    def updateStockInfo(self, ticker, netWorth, dividendRatio, volitility):
+        # call this method every iteration to receive all the parsed data
+        #   for the stock
         self.ticker = ticker
         self.netWorth = netWorth
-        self.bid = bid
-        self.ask = ask
-        self.dividendRatio = dividendRatio
+        #self.bid = bid
+        #self.ask = ask
+        self.prevDividendRatio = currDividendRatio
+        self.currDividendRatio = dividendRatio
         self.volitility = volitility
         if len(self.marketHistory) >= 50:
             marketHistory.pop(0)
         marketHistory.append(marketHistory)
-            
-        
+
+    def setShareValue(self):
+        # this only needs to get calculated once
+        # all actions depend on this long-term stock price
+        initialDividendPayout = marketHistory(0) * prevDividendRatio
+        decreasefactor = currDividendRatio / prevDividendRatio
+        self.ShareValue = initialDividendPayout / (1-dividendRatio)
+
+    def getBid(self):
+        # return the bid
+        return self.bid
+
+    def getAsk(self):
+        # return the ask
+        return self.ask
 
 ## LEIGHTON
     def main():
