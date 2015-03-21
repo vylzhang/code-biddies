@@ -47,18 +47,20 @@ class stock:
         self.currDividendRatio = -1
         self.volitility = -1
         self.marketHistory = list() # market value
-   
+
     def updateStockInfo(self, ticker, netWorth, dividendRatio, volitility):
         # call this method every iteration to receive all the parsed data
         #   for the stock
         self.ticker = ticker
         self.netWorth = netWorth
-        #self.bid = bid
-        #self.ask = ask
         self.prevDividendRatio = self.currDividendRatio
         self.currDividendRatio = dividendRatio
         self.volitility = volitility
 
+    def updateOrderInfo(self):
+        #get the bid and ask prices of the tickers
+        
+        
     def setShareValue(self):
         # this only needs to get calculated once
         # all actions depend on this long-term stock price
@@ -66,6 +68,9 @@ class stock:
         decreasefactor = currDividendRatio / prevDividendRatio
         self.ShareValue = initialDividendPayout / (1-dividendRatio)
 
+    def getTicker(self):
+        return self.ticker
+    
     def getBid(self):
         # return the bid
         return self.bid
@@ -89,7 +94,35 @@ def run_securities(): # returns list of lists
   #   print(" ", o ," ")
 
   return lol
-        
+
+def run_orders(tkr): # returns list of market orders
+  output = run("Better_Biddys","gibsonsux","ORDERS AAPL")
+  print(output)
+  outputP = output.split(" ");
+
+  i = 1
+  lol = []
+  bidAsk = []
+  while i<len(outputP):
+    lol.append(outputP[i:i+4])
+    i+=4
+  bidAsk.append(lol[0])
+  bidAsk.append(lol[len(lol)-1])
+  return bidAsk        
+
+def run_orders(tkr): # returns list of market orders
+  output = run("Better_Biddys","gibsonsux","ORDERS AAPL")
+  outputP = output.split(" ");
+
+  i = 1
+  lol = []
+  bidAsk = []
+  while i<len(outputP):
+    lol.append(outputP[i:i+4])
+    i+=4
+  bidAsk.append(lol[0])
+  bidAsk.append(lol[len(lol)-1])
+  return bidAsk 
 
 ## LEIGHTON
 if __name__ == "__main__":
