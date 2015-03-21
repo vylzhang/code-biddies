@@ -33,6 +33,10 @@ def subscribe(user, password):
             print(rline.strip())
             rline = sfile.readline()
 
-#THIS IS AN EDIT
+## HING
 
-#changes
+
+## LEIGHTON
+
+
+## VIVIAN
