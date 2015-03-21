@@ -50,12 +50,11 @@ class stock:
         self.ask = -1
         self.currDividendRatio = -1
         self.volitility = -1
-        self.marketHistory = list() #market value
-        #self.initialDividendPayout = 0
-        
-    #def setValues(bid, ask):
+        self.marketHistory = list() # market value
    
     def updateStockInfo(self, ticker, netWorth, dividendRatio, volitility):
+        # call this method every iteration to receive all the parsed data
+        #   for the stock
         self.ticker = ticker
         self.netWorth = netWorth
         #self.bid = bid
@@ -75,11 +74,12 @@ class stock:
         self.ShareValue = initialDividendPayout / (1-dividendRatio)
 
     def getBid(self):
-        a = 1 #return the bid; placeholder code
+        # return the bid
+        return self.bid
 
     def getAsk(self):
-        a = 1 #return the ask; placeholder code
-
+        # return the ask
+        return self.ask
 
 ## LEIGHTON
 
