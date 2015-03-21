@@ -15,8 +15,10 @@ def run(user, password, *commands):
         sfile = sock.makefile()
         rline = sfile.readline()
         while rline:
-            print(rline.strip())
+            temp = rline.strip()
+            print(temp)
             rline = sfile.readline()
+            return temp
 
 def subscribe(user, password):
     HOST, PORT = "codebb.cloudapp.net", 17429
