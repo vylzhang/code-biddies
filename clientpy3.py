@@ -89,7 +89,35 @@ def run_securities(): # returns list of lists
   #   print(" ", o ," ")
 
   return lol
-        
+
+def run_orders(tkr): # returns list of market orders
+  output = run("Better_Biddys","gibsonsux","ORDERS AAPL")
+  print(output)
+  outputP = output.split(" ");
+
+  i = 1
+  lol = []
+  bidAsk = []
+  while i<len(outputP):
+    lol.append(outputP[i:i+4])
+    i+=4
+  bidAsk.append(lol[0])
+  bidAsk.append(lol[len(lol)-1])
+  return bidAsk        
+
+def run_orders(tkr): # returns list of market orders
+  output = run("Better_Biddys","gibsonsux","ORDERS AAPL")
+  outputP = output.split(" ");
+
+  i = 1
+  lol = []
+  bidAsk = []
+  while i<len(outputP):
+    lol.append(outputP[i:i+4])
+    i+=4
+  bidAsk.append(lol[0])
+  bidAsk.append(lol[len(lol)-1])
+  return bidAsk 
 
 ## VIVIAN
 if __name__ == "__main__":
